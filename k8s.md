@@ -75,9 +75,10 @@ https://github.com/ahmetb/kubectx
 
 
  - **switch namespace senza kubens**
-`kubectl config set-context $(kubectl config current-context) --namespace=<namespace>
- kubectl config view | grep namespace
- ; kubectl get pods`
+  
+	`kubectl config set-context $(kubectl config current-context) --namespace=<namespace>`
+ 	`kubectl config view | grep namespace`
+ 	`kubectl get pods`
   
 - **list alla namespace resources**
 `kubectl api-resources --verbs=list --namespaced -o name   | xargs -n 1 kubectl get --show-kind --ignore-not-found -n tibco-prod`
