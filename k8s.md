@@ -48,11 +48,17 @@ https://github.com/ahmetb/kubectx
 	`kubectl config view -o jsonpath='{.users[?(@.name == "e2e")].user.password}'`
 	
 	`kubectl config view -o jsonpath='{.users[].name}'    # display the first user`
+	
 	`kubectl config view -o jsonpath='{.users[*].name}'   # get a list of users`
+	
 	`kubectl config get-contexts                          # display list of contexts`
+	
 	`kubectl config current-context                       # display the current-context`
+	
 	`kubectl config use-context my-cluster-name           # set the default context to my-cluster-name`
+	
 	`kubectl config set-cluster my-cluster-name           # set a cluster entry in the kubeconfig`
+	
 	
 
  - **configure the URL to a proxy server to use for requests made by this client in the kubeconfig**
