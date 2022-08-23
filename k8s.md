@@ -20,6 +20,7 @@
 	alias k=kubectl
 	complete -o default -F __start_kubectl k
 	```
+	
 
 ## **UTILS**
 
@@ -30,6 +31,7 @@
  - **kubectx/kubens**
 https://github.com/ahmetb/kubectx
 	
+
 
 ## **NAMESPACES/CONTEXT**
 
@@ -58,7 +60,8 @@ https://github.com/ahmetb/kubectx
          
  - **permanently save the namespace for all subsequent kubectl commands in
    that context.**  
-		`kubectl config set-context --current --namespace=ggckad-s2`
+   
+	`kubectl config set-context --current --namespace=ggckad-s2`
 
  - **set a context utilizing a specific username and namespace.**
 
@@ -70,8 +73,8 @@ https://github.com/ahmetb/kubectx
    bash-compatible shells, current context to be set before using kn to
    set namespace)**
 
-    `alias kx='f() { [ "$1" ] && kubectl config use-context $1 || kubectl config current-context ; } ; f'
-    alias kn='f() { [ "$1" ] && kubectl config set-context --current --namespace $1 || kubectl config view --minify | grep namespace | cut -d" " -f6 ; } ; f'`
+    `alias kx='f() { [ "$1" ] && kubectl config use-context $1 || kubectl config current-context ; } ; f'`
+    `alias kn='f() { [ "$1" ] && kubectl config set-context --current --namespace $1 || kubectl config view --minify | grep namespace | cut -d" " -f6 ; } ; f'`
 
 
  - **switch namespace senza kubens**
@@ -81,12 +84,15 @@ https://github.com/ahmetb/kubectx
  	`kubectl get pods`
   
 - **list alla namespace resources**
+- 
 `kubectl api-resources --verbs=list --namespaced -o name   | xargs -n 1 kubectl get --show-kind --ignore-not-found -n tibco-prod`
 
 - **events sorted** 
+- 
 `kubectl get events --sort-by=.metadata.creationTimestamp`
 
 - **get quotas for all namespace** 
+- 
 `kubectl get quota --all-namespaces -o=custom-columns=Project:.metadata.namespace,TotalPods:.status.used.pods,TotalCPURequest:.status.used.requests'\.'cpu,TotalCPULimits:.status.used.limits'\.'cpu,TotalMemoryRequest:.status.used.requests'\.'memory,TotalMemoryLimit:.status.used.limits'\.'memory`
 
 ## **EVENTS**
