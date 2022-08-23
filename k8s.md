@@ -37,8 +37,8 @@ https://github.com/ahmetb/kubectx
 
  - **use multiple kubeconfig files at the same time and view merged config**
 
-        KUBECONFIG=~/.kube/config:~/.kube/kubconfig2
-        kubectl config view
+        `KUBECONFIG=~/.kube/config:~/.kube/kubconfig2`
+        `kubectl config view`
 
  - **get the password for the e2e user + switch context**
 
@@ -52,11 +52,11 @@ https://github.com/ahmetb/kubectx
 
  - **configure the URL to a proxy server to use for requests made by this client in the kubeconfig**
 
-        kubectl config set-cluster my-cluster-name --proxy-url=my-proxy-url
+        `kubectl config set-cluster my-cluster-name --proxy-url=my-proxy-url`
     
  - **add a new user to your kubeconf that supports basic auth**
 
-         kubectl config set-credentials kubeuser/foo.kubernetes.com --username=kubeuser --password=kubepassword
+         `kubectl config set-credentials kubeuser/foo.kubernetes.com --username=kubeuser --password=kubepassword`
          
  - **permanently save the namespace for all subsequent kubectl commands in
    that context.**  
@@ -83,17 +83,17 @@ https://github.com/ahmetb/kubectx
  	`kubectl config view | grep namespace`
  	`kubectl get pods`
   
-- **list alla namespace resources**
+- **list all namespace resources**
 
-`kubectl api-resources --verbs=list --namespaced -o name   | xargs -n 1 kubectl get --show-kind --ignore-not-found -n tibco-prod`
+	`kubectl api-resources --verbs=list --namespaced -o name   | xargs -n 1 kubectl get --show-kind --ignore-not-found -n tibco-prod`
 
 - **events sorted** 
 
-`kubectl get events --sort-by=.metadata.creationTimestamp`
+	`kubectl get events --sort-by=.metadata.creationTimestamp`
 
 - **get quotas for all namespace** 
 
-`kubectl get quota --all-namespaces -o=custom-columns=Project:.metadata.namespace,TotalPods:.status.used.pods,TotalCPURequest:.status.used.requests'\.'cpu,TotalCPULimits:.status.used.limits'\.'cpu,TotalMemoryRequest:.status.used.requests'\.'memory,TotalMemoryLimit:.status.used.limits'\.'memory`
+	`kubectl get quota --all-namespaces -o=custom-columns=Project:.metadata.namespace,TotalPods:.status.used.pods,TotalCPURequest:.status.used.requests'\.'cpu,TotalCPULimits:.status.used.limits'\.'cpu,TotalMemoryRequest:.status.used.requests'\.'memory,TotalMemoryLimit:.status.used.limits'\.'memory`
 
 ## **EVENTS**
 
