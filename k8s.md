@@ -37,8 +37,9 @@ https://github.com/ahmetb/kubectx
 
  - **use multiple kubeconfig files at the same time and view merged config**
 
-        KUBECONFIG=~/.kube/config:~/.kube/kubconfig2
-        kubectl config view
+KUBECONFIG=~/.kube/config:~/.kube/kubconfig2
+kubectl config view
+        
 
  - **get the password for the e2e user + switch context**
 
@@ -52,11 +53,11 @@ https://github.com/ahmetb/kubectx
 
  - **configure the URL to a proxy server to use for requests made by this client in the kubeconfig**
 
-        kubectl config set-cluster my-cluster-name --proxy-url=my-proxy-url
+kubectl config set-cluster my-cluster-name --proxy-url=my-proxy-url
     
  - **add a new user to your kubeconf that supports basic auth**
 
-         kubectl config set-credentials kubeuser/foo.kubernetes.com --username=kubeuser --password=kubepassword
+kubectl config set-credentials kubeuser/foo.kubernetes.com --username=kubeuser --password=kubepassword
          
  - **permanently save the namespace for all subsequent kubectl commands in
    that context.**  
