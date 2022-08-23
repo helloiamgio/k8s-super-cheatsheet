@@ -33,7 +33,7 @@ https://github.com/ahmetb/kubectx
 	
 
 
-## **NAMESPACES/CONTEXT**
+## **NAMESPACES & CONTEXT**
 
  - **use multiple kubeconfig files at the same time and view merged config**
 
@@ -67,7 +67,7 @@ https://github.com/ahmetb/kubectx
 
     `kubectl config set-context gce --user=cluster-admin --namespace=foo \
   && kubectl config use-context gce`
-`kubectl config unset users.foo                       # delete user foo`
+	`kubectl config unset users.foo                       # delete user foo`
 
  - **short alias to set/show context/namespace (only works for bash and
    bash-compatible shells, current context to be set before using kn to
@@ -84,15 +84,15 @@ https://github.com/ahmetb/kubectx
  	`kubectl get pods`
   
 - **list alla namespace resources**
-- 
+
 `kubectl api-resources --verbs=list --namespaced -o name   | xargs -n 1 kubectl get --show-kind --ignore-not-found -n tibco-prod`
 
 - **events sorted** 
-- 
+
 `kubectl get events --sort-by=.metadata.creationTimestamp`
 
 - **get quotas for all namespace** 
-- 
+
 `kubectl get quota --all-namespaces -o=custom-columns=Project:.metadata.namespace,TotalPods:.status.used.pods,TotalCPURequest:.status.used.requests'\.'cpu,TotalCPULimits:.status.used.limits'\.'cpu,TotalMemoryRequest:.status.used.requests'\.'memory,TotalMemoryLimit:.status.used.limits'\.'memory`
 
 ## **EVENTS**
