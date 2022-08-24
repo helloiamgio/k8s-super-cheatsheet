@@ -40,8 +40,8 @@ https://github.com/ahmetb/kubectx
  - **use multiple kubeconfig files at the same time and view merged config**
 
 ```bash
-	KUBECONFIG=~/.kube/config:~/.kube/kubconfig2 	
-	kubectl config view
+KUBECONFIG=~/.kube/config:~/.kube/kubconfig2 	
+kubectl config view
 ```        
 
  - **get the password for the e2e user + switch context**
