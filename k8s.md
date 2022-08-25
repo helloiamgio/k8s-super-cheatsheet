@@ -346,7 +346,7 @@ kubectl describe pod $pod
 	kubectl rollout resume deployment nginx
 	kubectl rollout history deployment nginx
 	kubectl rollout undo deployments nginx (--to-revision 3)
-	```bash
+	```
  
 
  - **Disable a deployment livenessProbe using a json patch with positional
@@ -388,7 +388,7 @@ es. kubectl label node worker1  node-role.kubernetes.io/worker=worker
 
 > **INTERACT withNODES**
 
-	```bash
+	
 	kubectl cordon my-node                                                 	# Mark my-node as unschedulable
 	kubectl drain my-node                                                	  # Drain my-node in preparation for maintenance
 	kubectl uncordon my-node                                            	   # Mark my-node as schedulable
@@ -396,7 +396,7 @@ es. kubectl label node worker1  node-role.kubernetes.io/worker=worker
 	kubectl cluster-info                                                 	  # Display addresses of the master and services
 	kubectl cluster-info dump                                            	  # Dump current cluster state to stdout
 	kubectl cluster-info dump --output-directory=/path/to/cluster-state    	# Dump current cluster state to /path/to/cluster-state
-	```
+	
 
  - **View existing taints on which exist on current nodes.**
 
