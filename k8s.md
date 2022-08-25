@@ -59,142 +59,199 @@ https://github.com/ahmetb/kubectx
 
  - **configure the URL to a proxy server to use for requests made by this client in the kubeconfig**
 
-	`kubectl config set-cluster my-cluster-name --proxy-url=my-proxy-url`
-    
+	```bash
+	kubectl config set-cluster my-cluster-name --proxy-url=my-proxy-url`
+    ```
+	
  - **add a new user to your kubeconf that supports basic auth**
 
-	`kubectl config set-credentials kubeuser/foo.kubernetes.com --username=kubeuser --password=kubepassword`
-         
+	```bash
+	kubectl config set-credentials kubeuser/foo.kubernetes.com --username=kubeuser --password=kubepassword`
+	```	
+	 
  - **permanently save the namespace for all subsequent kubectl commands in
    that context.**  
-   
-	`kubectl config set-context --current --namespace=ggckad-s2`
-
+ 
+	```bash
+	kubectl config set-context --current --namespace=ggckad-s2`
+	```
+	
  - **set a context utilizing a specific username and namespace.**
 
-    `kubectl config set-context gce --user=cluster-admin --namespace=foo \
-  && kubectl config use-context gce`
-	`kubectl config unset users.foo                       # delete user foo`
+	```bash
+    kubectl config set-context gce --user=cluster-admin --namespace=foo \
+  && kubectl config use-context gce
+	kubectl config unset users.foo                       # delete user foo
+	```
 
  - **short alias to set/show context/namespace (only works for bash and
    bash-compatible shells, current context to be set before using kn to
    set namespace)**
 
-    `alias kx='f() { [ "$1" ] && kubectl config use-context $1 || kubectl config current-context ; } ; f'`
-    `alias kn='f() { [ "$1" ] && kubectl config set-context --current --namespace $1 || kubectl config view --minify | grep namespace | cut -d" " -f6 ; } ; f'`
-
+	```bash
+    alias kx='f() { [ "$1" ] && kubectl config use-context $1 || kubectl config current-context ; } ; f'
+    alias kn='f() { [ "$1" ] && kubectl config set-context --current --namespace $1 || kubectl config view --minify | grep namespace | cut -d" " -f6 ; } ; f'
+	```
 
  - **switch namespace senza kubens**
   
-	`kubectl config set-context $(kubectl config current-context) --namespace=<namespace>`
- 	`kubectl config view | grep namespace`
- 	`kubectl get pods`
+	```bash
+	kubectl config set-context $(kubectl config current-context) --namespace=<namespace>
+	kubectl config view | grep namespace
+	kubectl get pods
+	```
   
 - **list all namespace resources**
 
-	`kubectl api-resources --verbs=list --namespaced -o name   | xargs -n 1 kubectl get --show-kind --ignore-not-found -n tibco-prod`
+	```
+	kubectl api-resources --verbs=list --namespaced -o name   | xargs -n 1 kubectl get --show-kind --ignore-not-found -n tibco-prod
+	```
 
 - **events sorted** 
 
-	`kubectl get events --sort-by=.metadata.creationTimestamp`
-
+	```bash
+	kubectl get events --sort-by=.metadata.creationTimestamp
+	```
+	
 - **get quotas for all namespace** 
 
-	`kubectl get quota --all-namespaces -o=custom-columns=Project:.metadata.namespace,TotalPods:.status.used.pods,TotalCPURequest:.status.used.requests'\.'cpu,TotalCPULimits:.status.used.limits'\.'cpu,TotalMemoryRequest:.status.used.requests'\.'memory,TotalMemoryLimit:.status.used.limits'\.'memory`
+	```bash
+	kubectl get quota --all-namespaces -o=custom-columns=Project:.metadata.namespace,TotalPods:.status.used.pods,TotalCPURequest:.status.used.requests'\.'cpu,TotalCPULimits:.status.used.limits'\.'cpu,TotalMemoryRequest:.status.used.requests'\.'memory,TotalMemoryLimit:.status.used.limits'\.'memory
+	```
 
 ## **EVENTS**
 
  - **get event sort by creation**
 
-    `kubectl get events --sort-by=.metadata.creationTimestamp`
-
+	```bash
+    kubectl get events --sort-by=.metadata.creationTimestamp
+	```
 
 ## **POD**
 
  - **pod request/limits**
 
-	`kubectl get $i -o=jsonpath='{range .spec.containers[*]}{"Container Name: "}{.name}{"\n"}{"Requests:"}{.resources.requests}{"\n"}{"Limits:"}{.resources.limits}{"\n"}{end}' -n <NAMESPACE>`
-
+	```bash
+	kubectl get $i -o=jsonpath='{range .spec.containers[*]}{"Container Name: "}{.name}{"\n"}{"Requests:"}{.resources.requests}{"\n"}{"Limits:"}{.resources.limits}{"\n"}{end}' -n <NAMESPACE>
+	```
+	
  - **pod x nodo**
-
-	`kubectl get pods -o wide --all-namespaces | awk '{print $8}' | sort | uniq -c`
+	
+	```bash
+	kubectl get pods -o wide --all-namespaces | awk '{print $8}' | sort | uniq -c
+	```
 
  - **max pod x nodo**
-
-	`kubectl get node <node_name> -ojsonpath='{.status.capacity.pods}{"\n"}'`
-
+ 
+	```bash
+	kubectl get node <node_name> -ojsonpath='{.status.capacity.pods}{"\n"}'
+	```
+	
  - **aprire shell in un pod**
 
-	`kubectl exec -it --namespace=<NAMESPACE> <pod> -- bash (-c "mongo")`
+	```bash
+	kubectl exec -it --namespace=<NAMESPACE> <pod> -- bash (-c "mongo")
+	```
 
  - **describe pod with particular label**
 
-	`pod=$(kubectl get pods --selector="name=frontend" --output=jsonpath={.items..metadata.name})`
-`kubectl describe pod $pod`
+	```bash
+	pod=$(kubectl get pods --selector="name=frontend" --output=jsonpath={.items..metadata.name})
+kubectl describe pod $pod
+	```
 
  - **list only name**
 
-	`kubectl get pods --no-headers -o custom-columns=":metadata.name"`
-	`kubectl get deploy --no-headers -o custom-columns=":metadata.name"`
+	```bash
+	kubectl get pods --no-headers -o custom-columns=":metadata.name"
+	kubectl get deploy --no-headers -o custom-columns=":metadata.name"
+	```
 
  - **list pod by restart**
 
-	`kubectl get pods --sort-by='.status.containerStatuses[0].restartCount'`
-
+	```bash
+	kubectl get pods --sort-by='.status.containerStatuses[0].restartCount'
+	```
+	
  - **list pod by age**
 
-	`kubectl get pods --sort-by=.metadata.creationTimestamp`
-
+	```bash
+	kubectl get pods --sort-by=.metadata.creationTimestamp
+	```
+	
  - **list non running pod**
 
-	`kubectl get pods -A --field-selector=status.phase!=Running | grep -v Complete`
+	```bash
+	kubectl get pods -A --field-selector=status.phase!=Running | grep -v Complete
 
-	`kubectl get pod --field-selector status.phase!=Running -o=custom-columns=NAME:.metadata.name,STATUS:.status.phase,NAMEDPACE:.metadata.namespace`
-
+	kubectl get pod --field-selector status.phase!=Running -o=custom-columns=NAME:.metadata.name,STATUS:.status.phase,NAMEDPACE:.metadata.namespace
+	```
+	
  - **get pods x nodes**
 
-	`kubectl get pods --all-namespaces -o wide --field-selector spec.nodeName=`
-
+	```bash
+	kubectl get pods --all-namespaces -o wide --field-selector spec.nodeName=
+	```
+	
  - **get pod using column**
 
-	`kubectl get pods --all-namespaces -o=custom-columns=NAME:.metadata.name,Namespace:.metadata.namespace`
-
+	```bash
+	kubectl get pods --all-namespaces -o=custom-columns=NAME:.metadata.name,Namespace:.metadata.namespace
+	```
+	
  - **list pod sort by name**
 
-	`kubectl get po -o wide --sort-by=.spec.nodeName`
-
+	```bash
+	kubectl get po -o wide --sort-by=.spec.nodeName
+	```
+	
  - **which pod is using which PVC**
 
-	`kubectl get po -o json --all-namespaces | jq -j '.items[] | "\(.metadata.namespace), \(.metadata.name), \(.spec.volumes[].persistentVolumeClaim.claimName)\n"' | grep -v null`
+	```bash
+	kubectl get po -o json --all-namespaces | jq -j '.items[] | "\(.metadata.namespace), \(.metadata.name), \(.spec.volumes[].persistentVolumeClaim.claimName)\n"' | grep -v null
+	```
 
  - **Pod termination message**
 
-	`kubectl get pod termination-demo -o go-template="{{range .status.containerStatuses}}{{.lastState.terminated.message}}{{end}}"`
+	```bash
+	kubectl get pod termination-demo -o go-template="{{range .status.containerStatuses}}{{.lastState.terminated.message}}{{end}}"
+	```
 
  - **delete evicted pods**
 
-`	for POD in $(`kubectl get pods|grep Evicted|awk '{print $1}'); do `kubectl delete pods $POD ; done`
+	```bash
+	for POD in $(kubectl get pods|grep Evicted|awk '{print $1}'); do kubectl delete pods $POD ; done
+	```
 
  - **delete ALL non Running pods**
  
-	`kubectl get po --all-namespaces --no-headers | grep -v Running > /tmp/podnotok && cat /tmp/podnotok | while read ns pod rep stat; do kubectl delete pod $pod -n $ns --force --grace-period=0 ; done`
+	```bash
+	kubectl get po --all-namespaces --no-headers | grep -v Running > /tmp/podnotok && cat /tmp/podnotok | while read ns pod rep stat; do kubectl delete pod $pod -n $ns --force --grace-period=0 ; done
+	```
 
  - **logs tail**
 
-	`k logs -f NOMEPOD --tail=10`
+	```bash
+	k logs -f NOMEPOD --tail=10
+	```
 
  - **logs degli ultimi x minuti**
 
-	`k logs -f NOMEPOD --since=30m`
+	```bash
+	k logs -f NOMEPOD --since=30m
+	```
 
  - **check reason for evicted pods**
 
-	`kubectl get pod -A -o json | jq '.items | select(.status.reason=="Evicted") | {NAME:.metadata.name, NAMESPACE:.metadata.namespace, REASON:.status.reason, MESSAGE:.status.message}'`
+	```bash
+	kubectl get pod -A -o json | jq '.items | select(.status.reason=="Evicted") | {NAME:.metadata.name, NAMESPACE:.metadata.namespace, REASON:.status.reason, MESSAGE:.status.message}'
+	```
 
  - **Produce ENV for all pods**
 
-	`for pod in $(`kubectl get po --output=jsonpath={.items..metadata.name}); do echo $pod && `kubectl exec -it $pod -- env; done`
-    
+	```bash
+	for pod in $(kubectl get po --output=jsonpath={.items..metadata.name}); do echo $pod && kubectl exec -it $pod -- env; done
+    ```
 
 > **INTERACT with POD**
 
@@ -228,80 +285,110 @@ https://github.com/ahmetb/kubectx
 
  - **restart pod graceful**
 
-    `k get deploy`
-    `k rollout restart deployment ncp-3ds`
+	```bash
+    k get deploy
+    k rollout restart deployment ncp-3ds
+	```
 
  - **ROLLOUT RESTART under 1.15 kubectl**
 
-	`kubectl patch deployment NOMEDEPLOY -p "{\"spec\":{\"template\":{\"metadata\":{\"annotations\":{\"date\":\"`date +'%s'`\"}}}}}"`
+	```bash
+	kubectl patch deployment NOMEDEPLOY -p "{\"spec\":{\"template\":{\"metadata\":{\"annotations\":{\"date\":\"`date +'%s'`\"}}}}}"
+	```
 
  - **restart updating dummy ENV**
 
+	```bash
 	`kubectl set env deploy/<DEPLOY> MYVAR=$(date)`
+	```
 
  - **RESTART ALL DEPLOYMENT in THE CLUSTER**
-
-	`kubectl get deployments --all-namespaces | tail +2 | awk '{ cmd=sprintf("kubectl rollout restart deployment -n %s %s", $1, $2) ; system(cmd) }'`
+	
+	```bash
+	kubectl get deployments --all-namespaces | tail +2 | awk '{ cmd=sprintf("kubectl rollout restart deployment -n %s %s", $1, $2) ; system(cmd) }'
+	```
 
  - **SCALE DOWN**
 
-	`cat all_deployment.txt | grep -v "0/0" | grep -v NAME | grep -v kube-system | grep -v istio-system | while read ns dep more ; do kubectl scale deployment $dep -n $ns --replicas=0; done`
+	```bash
+	cat all_deployment.txt | grep -v "0/0" | grep -v NAME | grep -v kube-system | grep -v istio-system | while read ns dep more ; do kubectl scale deployment $dep -n $ns --replicas=0; done
+	```
 
  - **SCALE UP**
 
-	`cat all_deployment.txt | grep -v "0/0" | grep -v NAME | grep -v istio-system | grep -v kube-system | while read ns dep rep more; do replica=$(echo $rep | cut -f2 -d "/"); kubectl scale deployment $dep -n $ns --replicas=$replica; done`
+	```bash
+	cat all_deployment.txt | grep -v "0/0" | grep -v NAME | grep -v istio-system | grep -v kube-system | while read ns dep rep more; do replica=$(echo $rep | cut -f2 -d "/"); kubectl scale deployment $dep -n $ns --replicas=$replica; done
+	```
 
  - **BACKUP DEPLOY**
 
-	`for i in $(kubectl get deployments --no-headers -o custom-columns=":metadata.name"); do k get deploy $i -o yaml > $i-deploy.yaml; done`
-
+	```bash
+	for i in $(kubectl get deployments --no-headers -o custom-columns=":metadata.name"); do k get deploy $i -o yaml > $i-deploy.yaml; done
+	```
+	
  - **SET RESOURCES DEPLOY**  
-	`kubectl set resources deployment nginx --limits cpu=200m,memory=512Mi --requests cpu=100m,memory=256Mi`
+ 
+	```bash
+	kubectl set resources deployment nginx --limits cpu=200m,memory=512Mi --requests cpu=100m,memory=256Mi
+	```
 
  - **REMOVE RESOURCES DEPLOY**
 
-	`	kubectl set resources deployment ng`
+	```bash
+	kubectl set resources deployment ng
+	```
 
  - **ROLLOUT DEPLOY**
 
-	`kubectl rollout status deployment nginx`
-	`kubectl rollout pause deployment nginx`
-	`kubectl rollout resume deployment nginx`
-	`kubectl rollout history deployment nginx`
-	`kubectl rollout undo deployments nginx (--to-revision 3)`
-
+	```bash
+	kubectl rollout status deployment nginx
+	kubectl rollout pause deployment nginx
+	kubectl rollout resume deployment nginx
+	kubectl rollout history deployment nginx
+	kubectl rollout undo deployments nginx (--to-revision 3)
+	```bash
  
 
  - **Disable a deployment livenessProbe using a json patch with positional
    arrays**
 
-	`kubectl patch deployment valid-deployment  --type json   -p='[{"op": "remove", "path": "/spec/template/spec/containers/0/livenessProbe"}]'inx --limits cpu=0,memory=0 --requests cpu=0,memory=0`
+	```bash
+	kubectl patch deployment valid-deployment  --type json   -p='[{"op": "remove", "path": "/spec/template/spec/containers/0/livenessProbe"}]'inx --limits cpu=0,memory=0 --requests cpu=0,memory=0
+	```
 
 ## NODES
 
  - **ALLOCAZIONE RISORSE**
 
-	`alias util='kubectl get nodes --no-headers | awk '\''{print $1}'\'' | xargs -I {} sh -c '\''echo {} ; kubectl describe node {} | grep Allocated -A 5 | grep -ve Event -ve Allocated -ve percent -ve -- ; echo '\'''`
-`util`
+	```bash
+	alias util='kubectl get nodes --no-headers | awk '\''{print $1}'\'' | xargs -I {} sh -c '\''echo {} ; kubectl describe node {} | grep Allocated -A 5 | grep -ve Event -ve Allocated -ve percent -ve -- ; echo '\'''
+	util
+	```
 
  - **label node**
 
-	`kubectl node <node-name> kubernets.io/role=<name-your-node-role>  --overwrite`  
-`es. kubectl label node worker1  node-role.kubernetes.io/worker=worker`
+	```bash
+	kubectl node <node-name> kubernets.io/role=<name-your-node-role>  --overwrite  
+es. kubectl label node worker1  node-role.kubernetes.io/worker=worker
+	```
 
  - **check Taints**
 
-	`kubectl get nodes <NODE> -o json | jq -r '.spec.taints | .[]'`
+	```bash
+	kubectl get nodes <NODE> -o json | jq -r '.spec.taints | .[]'
+	```
 
  - **get node info columns**
 
-	`kubectl get nodes -o custom-columns="Name:.metadata.name,InternalIP:.status.addresses[0].address"`
+	```bash
+	kubectl get nodes -o custom-columns="Name:.metadata.name,InternalIP:.status.addresses[0].address"
 
-	`kubectl get nodes -o custom-columns="Name:.metadata.name,InternalIP:.status.addresses[0].address,Kernel:.status.nodeInfo.kernelVersion,MemoryPressure:.status.conditions[0].status,DiskPressure:.status.conditions[1].status,PIDPressure:.status.conditions[2].status,Ready:.status.conditions[3].status"`
-
+	kubectl get nodes -o custom-columns="Name:.metadata.name,InternalIP:.status.addresses[0].address,Kernel:.status.nodeInfo.kernelVersion,MemoryPressure:.status.conditions[0].status,DiskPressure:.status.conditions[1].status,PIDPressure:.status.conditions[2].status,Ready:.status.conditions[3].status"
+	```
 
 > **INTERACT withNODES**
 
+	```bash
 	kubectl cordon my-node                                                 	# Mark my-node as unschedulable
 	kubectl drain my-node                                                	  # Drain my-node in preparation for maintenance
 	kubectl uncordon my-node                                            	   # Mark my-node as schedulable
@@ -309,116 +396,148 @@ https://github.com/ahmetb/kubectx
 	kubectl cluster-info                                                 	  # Display addresses of the master and services
 	kubectl cluster-info dump                                            	  # Dump current cluster state to stdout
 	kubectl cluster-info dump --output-directory=/path/to/cluster-state    	# Dump current cluster state to /path/to/cluster-state
+	```
 
  - **View existing taints on which exist on current nodes.**
 
-	`kubectl get nodes -o=custom-columns=NodeName:.metadata.name,TaintKey:.spec.taints[*].key,TaintValue:.spec.taints[*].value,TaintEffect:.spec.taints[*].effect`
+	```bash
+	kubectl get nodes -o=custom-columns=NodeName:.metadata.name,TaintKey:.spec.taints[*].key,TaintValue:.spec.taints[*].value,TaintEffect:.spec.taints[*].effect
+	```
 
  - **If a taint with that key and effect already exists, its value is
    replaced as specified.**
 
-	`kubectl taint nodes foo dedicated=special-user:NoSchedule`
+	```bash
+	kubectl taint nodes foo dedicated=special-user:NoSchedule
+	```
 
 ## CRONJOB
 
  - **execute jobs immediately**
 
-	`kubectl get cronjob -n <NAMESPACE>`
-	`kubectl create job --from=cronjob/<cronjob-name> <job-name> -n <NAMESPACE>`
+	```bash
+	kubectl get cronjob -n <NAMESPACE>
+	kubectl create job --from=cronjob/<cronjob-name> <job-name> -n <NAMESPACE>
 
-	`kubectl get pods -n <NAMESPACE>`
-	`kubectl delete job <job-name>`
-	`kubectl delete pods/nomepod -n <NAMESPACE>`
+	kubectl get pods -n <NAMESPACE>
+	kubectl delete job <job-name>
+	kubectl delete pods/nomepod -n <NAMESPACE>
+	```
 
  - **patch cronjob schedule**
 
-	`kubectl patch cronjobs <job-name> -p '{"spec" : {"suspend" : true }}'`
+	```bash
+	kubectl patch cronjobs <job-name> -p '{"spec" : {"suspend" : true }}'
+	```
 
  - **suspend active cronjobs**
 
-	`kubectl get cronjob | grep False | awk '{print $1}' | xargs kubectl patch cronjob -p '{"spec" : {"suspend" : true }}'`
+	```bash
+	kubectl get cronjob | grep False | awk '{print $1}' | xargs kubectl patch cronjob -p '{"spec" : {"suspend" : true }}'
+	```
 
  - **resume suspended cronjobs**
 
-	`kubectl get cronjob | grep True | awk '{print $1}' | xargs kubectl patch cronjob -p '{"spec" : {"suspend" : false }}'`
+	```bash
+	kubectl get cronjob | grep True | awk '{print $1}' | xargs kubectl patch cronjob -p '{"spec" : {"suspend" : false }}'
+	```
 
  - **LOOP**
 
-	`for CJ in $(k get cj -A | grep ocr | awk '{print $2}'); do k patch cj $CJ -p '{"spec" : {"suspend" : true }}'; done`
-	`for CJ in $(k get cj -A | grep ocr | awk '{print $2}'); do k patch cj $CJ -p '{"spec" : {"suspend" : false }}'; done`
+	```bash
+	for CJ in $(k get cj -A | grep ocr | awk '{print $2}'); do k patch cj $CJ -p '{"spec" : {"suspend" : true }}'; done
+	for CJ in $(k get cj -A | grep ocr | awk '{print $2}'); do k patch cj $CJ -p '{"spec" : {"suspend" : false }}'; done
+	```
 
  - **recreate cronjob**
 
-	`for CJ in $(k get cj -A | grep ocr | awk '{print $2}'); do k get cj $CJ -o yaml > $CJ.backup.yaml; done`
-	`for CJ in $(k get cj -A | grep ocr | awk '{print $2}'); do k delete cj $CJ` ; done`for CJ in $(ls -1 *.yaml); do k create -f $CJ.backup.yaml ; done`
+	```bash
+	for CJ in $(k get cj -A | grep ocr | awk '{print $2}'); do k get cj $CJ -o yaml > $CJ.backup.yaml; done
+	for CJ in $(k get cj -A | grep ocr | awk '{print $2}'); do k delete cj $CJ ; donefor CJ in $(ls -1 *.yaml); do k create -f $CJ.backup.yaml ; done
+	```
 
  - **create a Job which prints "Hello World"**
 
-	`kubectl create job hello --image=busybox:1.28 -- echo "Hello World"`
-
+	```bash
+	kubectl create job hello --image=busybox:1.28 -- echo "Hello World"
+	```
 
  - **create a CronJob that prints "Hello World" every minute**
 
-	`kubectl create cronjob hello --image=busybox:1.28   --schedule="*/1 * * * *" -- echo "Hello World"`
-
-
+	```bash
+	kubectl create cronjob hello --image=busybox:1.28   --schedule="*/1 * * * *" -- echo "Hello World"
+	```
 
 ## IMAGES
 
  - **list all images for pod**
 
-	`kubectl get pods -o jsonpath='{range .items[*]}{"\n"}{.metadata.name}{":\t"}{range .spec.containers[*]}{.image}{", "}{end}{end}' | sort`
+	```bash
+	kubectl get pods -o jsonpath='{range .items[*]}{"\n"}{.metadata.name}{":\t"}{range .spec.containers[*]}{.image}{", "}{end}{end}' | sort
 
-	`kubectl get pods -o jsonpath="{.items[*].spec.containers[*].image}"`
-
+	kubectl get pods -o jsonpath="{.items[*].spec.containers[*].image}"
+	```
 
 ## DAEMONSET
 
  - **Scaling k8s daemonset down to zero**
 
-	`kubectl patch daemonset myDaemonset -p '{"spec": {"template": {"spec": {"nodeSelector": {"non-existing": "true"}}}}}'`
+	```bash
+	kubectl patch daemonset myDaemonset -p '{"spec": {"template": {"spec": {"nodeSelector": {"non-existing": "true"}}}}}'
+	```
 
  - **Scaling up k8s daemonset**
 
-	`kubectl patch daemonset myDaemonset --type json -p=' {"op": "remove", "path": "/spec/template/spec/nodeSelector/non-existing"} '`
+	```bash
+	kubectl patch daemonset myDaemonset --type json -p=' {"op": "remove", "path": "/spec/template/spec/nodeSelector/non-existing"} '
+	```
 
 ## **SECRET**
 
  - **Print secrets in clear base64**
 
-	`kubectl get secret my-secret -o 'go-template={{index .data "username"}}' | base64 -d`
-	`kubectl get secret my-secret -o json | jq '.data | map_values(@base64d)'`
-
- 
+	```bash
+	kubectl get secret my-secret -o 'go-template={{index .data "username"}}' | base64 -d
+	kubectl get secret my-secret -o json | jq '.data | map_values(@base64d)'
+	```
 
  - **update with patch**
 
-	`kubectl patch secret test --type='json' -p='[{"op" : "replace" ,"path" : "/data/username" ,"value" : "dGVzdHVzZXIy"}]'`
-
+	```bash
+	kubectl patch secret test --type='json' -p='[{"op" : "replace" ,"path" : "/data/username" ,"value" : "dGVzdHVzZXIy"}]'
+	```
 
  - **Create a secret with several keys**
 
-	`cat <<EOF | kubectl apply -f -`
-`apiVersion: v1`
-`kind: Secret`
-`metadata:`
-  `name: mysecret`
-`type: Opaque`
-`data:`
-  `password: $(echo -n "s33msi4" | base64 -w0)`
-  `username: $(echo -n "jane" | base64 -w0)`
-`EOF`
+```bash
+	cat <<EOF | kubectl apply -f -
+apiVersion: v1
+kind: Secret
+metadata:
+  name: mysecret
+type: Opaque
+data:
+  password: $(echo -n "s33msi4" | base64 -w0)
+  username: $(echo -n "jane" | base64 -w0)
+EOF
+```
 
  - **Output decoded secrets without external tools**
 
-	`kubectl get secret my-secret -o go-template='{{range $k,$v := .data}}{{" "}}{{$k}}{{"\n"}}{{$v|base64decode}}{{"\n\n"}}{{end}}'`
+	```bash
+	kubectl get secret my-secret -o go-template='{{range $k,$v := .data}}{{" "}}{{$k}}{{"\n"}}{{$v|base64decode}}{{"\n\n"}}{{end}}'
+	```
 
  - **List all Secrets currently in use by a pod**
 
-	`kubectl get pods -o json | jq '.items[].spec.containers[].env[]?.valueFrom.secretKeyRef.name' | grep -v null | sort | uniq`
+	```bash
+	kubectl get pods -o json | jq '.items[].spec.containers[].env[]?.valueFrom.secretKeyRef.name' | grep -v null | sort | uniq
+	```
 
 ## **CONFIGMAP**
 
  - **extract file from configmap**
 
-	`kubectl get cm <NOME-CONFIGMAP>-o jsonpath='{.data.ballerina\.conf}' > ballerina.conf`
+	```bash
+	kubectl get cm <NOME-CONFIGMAP>-o jsonpath='{.data.ballerina\.conf}' > ballerina.conf
+	```
